@@ -1,5 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -67,7 +69,7 @@ public class Gameworkspace extends JPanel implements Runnable, KeyListener{
 			snake.add(x);
 		}
 		ticks++;
-		if(ticks > 250000) {
+		if(ticks > 500000) {
 			if(right) aCord++;
 			if(left) aCord--;
 			if(up) bCord --;
@@ -132,6 +134,10 @@ public class Gameworkspace extends JPanel implements Runnable, KeyListener{
 		for(int i = 0; i < points.size(); i++) {
 			points.get(i).draw(g);
 		}
+		g.setColor(Color.RED);
+		g.setFont(new Font("Ink Free", Font.BOLD, 25));
+		FontMetrics metrics = getFontMetrics(g.getFont());
+		g.drawString("Score:" + points, (WIDTH - metrics.stringWidth("Score: " + points))/2, g.getFont().getSize());
 	}
 
 	@Override
