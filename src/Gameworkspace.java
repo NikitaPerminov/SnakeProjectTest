@@ -68,22 +68,7 @@ public class Gameworkspace extends JPanel implements Runnable, KeyListener{
 			x = new GameBody(aCord, bCord, 10);
 			snake.add(x);
 		}
-		ticks++;
-		if(ticks > 500000) {
-			if(right) aCord++;
-			if(left) aCord--;
-			if(up) bCord --;
-			if(down) bCord++;
-			
-			ticks = 0;
-			
-			x = new GameBody(aCord, bCord, 10);
-			snake.add(x);
-			
-			if(snake.size() > size) {
-				snake.remove(0);
-			}
-		}
+		
 		if(points.size() == 0) {
 			int aCord = dotr.nextInt(108);
 			int bCord = dotr.nextInt(108);
@@ -107,38 +92,62 @@ public class Gameworkspace extends JPanel implements Runnable, KeyListener{
 					stop();
 				}
 			}
+			
 		}
-		
 		// end on border
 		if(aCord < 0 || aCord > 108 || bCord < 0 || bCord > 108) {
 			System.out.println("Game Over");
 			stop();
 		}
 		
+		
+		ticks++;
+		
+		
+		if(ticks > 500000) {
+			if(right) aCord++;
+			if(left) aCord--;
+			if(up) bCord --;
+			if(down) bCord++;
+			
+			ticks = 0;
+			
+			x = new GameBody(aCord, bCord, 10);
+			snake.add(x);
+			
+			if(snake.size() > size) {
+				snake.remove(0);
+			}
+		}
 	}
 	public void paint(Graphics g) {
-		g.clearRect(0, 0, WIDTH, HEIGHT);
+		if(starting) {
+			g.clearRect(0, 0, WIDTH, HEIGHT);
 		
-		g.setColor(Color.GRAY);
-		g.fillRect(0, 0, WIDTH, HEIGHT);
+			g.setColor(Color.GRAY);
+			g.fillRect(0, 0, WIDTH, HEIGHT);
 		
-		for(int i = 0; i < WIDTH/10; i++) {
-			g.drawLine(i * 10, 0, i * 10 , HEIGHT);
+			for(int i = 0; i < WIDTH/10; i++) {
+				g.drawLine(i * 10, 0, i * 10 , HEIGHT);
+			}
+			for(int i = 0; i < HEIGHT/10; i++) {
+				g.drawLine(0, i * 10, HEIGHT , i * 10);
+			}
+			for(int i = 0; i < snake.size(); i++) {
+				snake.get(i).draw(g);
+			}
+			for(int i = 0; i < points.size(); i++) {
+				points.get(i).draw(g);
+			}
+			g.setColor(Color.RED);
+			g.setFont(new Font("Ink Free", Font.BOLD, 25));
+			FontMetrics metrics1 = getFontMetrics(g.getFont());
+			g.drawString("Score:" + points, (WIDTH - metrics1.stringWidth("Score: " + points))/2, g.getFont().getSize());
 		}
-		for(int i = 0; i < HEIGHT/10; i++) {
-			g.drawLine(0, i * 10, HEIGHT , i * 10);
+		else {
+		gameOver(g);
 		}
-		for(int i = 0; i < snake.size(); i++) {
-			snake.get(i).draw(g);
-		}
-		for(int i = 0; i < points.size(); i++) {
-			points.get(i).draw(g);
-		}
-		g.setColor(Color.RED);
-		g.setFont(new Font("Ink Free", Font.BOLD, 25));
-		FontMetrics metrics = getFontMetrics(g.getFont());
-		g.drawString("Score:" + points, (WIDTH - metrics.stringWidth("Score: " + points))/2, g.getFont().getSize());
-	}
+	}		
 
 	@Override
 	public void run() {
@@ -174,16 +183,26 @@ public class Gameworkspace extends JPanel implements Runnable, KeyListener{
 			right = false;
 		}
 	}
+	public void gameOver(Graphics g) {
+		//Score
+		g.setColor(Color.red);
+		g.setFont( new Font("Ink Free",Font.BOLD, 40));
+		FontMetrics metrics1 = getFontMetrics(g.getFont());
+		g.drawString("Score: " + point, (WIDTH - metrics1.stringWidth("Score: " + point))/2, g.getFont().getSize());
+		//Game Over text
+		g.setColor(Color.red);
+		g.setFont( new Font("Ink Free",Font.BOLD, 75));
+		FontMetrics metrics2 = getFontMetrics(g.getFont());
+		g.drawString("Game Over", (WIDTH - metrics2.stringWidth("Game Over"))/2, HEIGHT/2);
+	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
+	public void keyPressed(KeyEvent e) {	
 		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 }
